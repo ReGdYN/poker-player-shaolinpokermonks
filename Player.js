@@ -97,7 +97,6 @@ class Player {
 
     //Player.testStuff(gameState);
     console.log("GameState:", gameState);
-    console.log("CommunityCardsLength", Player.getCommunityCards(gameState).length);
     console.log("---- Starting Bet Request ----");
     try {
       const currentPlayerState = Player.getMyPlayer(gameState);
