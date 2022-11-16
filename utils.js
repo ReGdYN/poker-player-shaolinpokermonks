@@ -70,8 +70,8 @@ function sortHand(hand) {
 }
 
 function getFullHand(gameState) {
-  const myHand = getMyHand(gameState);
-  const communityHand = getCommunityCards(gameState);
+  const myHand = getMyHand(gameState).map(card => card.rank);
+  const communityHand = getCommunityCards(gameState).map(card => card.rank);
 
   const fullHand = sortHand([...myHand, ...communityHand].map(card => card.rank));
 
