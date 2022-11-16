@@ -113,7 +113,7 @@ class HandDetector {
       };
     }
     return {
-      isPair: false,
+      isTrips: false,
       tripsRank: false
     };
   }
