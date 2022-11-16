@@ -48,6 +48,7 @@ class HandDetector {
     var playerCards = this.getMyHand(gameState);
     allCards.push(playerCards[0]);
     allCards.push(playerCards[1]);
+    return allCards;
   }
   static getMyPlayer(gameState) {
     return gameState["players"][gameState["in_action"]];
@@ -58,6 +59,10 @@ class HandDetector {
   }
 
   static getCommunityCards(gameState) {
+    if (!gameState.community_cards) {
+      console.log("Community cards NOT available");
+      return [];
+    }
     return gameState.community_cards;
   }
 }
