@@ -112,12 +112,12 @@ class Player {
           placeBet += minumumRaise;
         }
       }
-      this.testStuff(gameState);
+      Player.testStuff(gameState);
 
       bet(Math.min(placeBet, currentPlayerState["stack"]));
     } catch (err) {
       console.error("[ERROR] Fucked up", err);
-      this.testStuff(gameState);
+      Player.testStuff(gameState);
       bet(0);
     }
 
@@ -128,7 +128,7 @@ class Player {
 
   static testStuff(gameState) {
     try {
-      console.log("MY HAND:", this.getMyHand(gameState));
+      console.log("MY HAND:", Player.getMyHand(gameState));
       //console.log("Pair Detector:", HandDetector.isOurOwnPair(gameState));
     } catch (err) {
       console.log("ERROR IN TESTING STUFF", err);
