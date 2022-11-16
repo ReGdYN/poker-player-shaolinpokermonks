@@ -39,6 +39,38 @@ class Player {
     return cards[0].suit === cards[1].suit;
   }
 
+  static areMatchingSign(cards) {
+    return cards[0].rank === cards[1].rank;
+  }
+
+  static getSuiteCount(ourCards, communityCards) {
+    let suits = {
+      "hearts": 0,
+      "spades": 0,
+      "clubs": 0,
+      "diamonds": 0
+    };
+    ourCards.forEach(card => {
+      suits[card.suit]++;
+    });
+    communityCards.forEach(card => {
+      suits[card.suit]++;
+    });
+    return suits;
+  }
+
+  static currentMaxMatchingSuits(ourCards, communityCards) {
+    let currentSuits = Player.getSuiteCount(ourCards, communityCards);
+    let maxCount = 0;
+
+    Object.keys(currentSuits).forEach(key => {
+      if (currentSuits[key] > maxCount) {
+        maxCount = currentSuits[key];
+      }
+    });
+    return maxCount;
+  }
+
   static betRequest(gameState, bet) {
     try {
       const currentPlayerState = Player.getMyPlayer(gameState);
@@ -47,8 +79,13 @@ class Player {
       let minumumRaise = gameState["minimum_raise"];
       let currentHandSign = Player.getPairSign(ourCards);
 
-      if (Player.isPreFlop(gameState)) {
-        let matchingCards = ourCards[0].rank == ourCards[1].rank;
+      let hasBeenRaised = gameState["current_buy_in"] > (gameState["small_blind"] * 2);
+
+      if (Player.currentMaxMatchingSuits(ourCards, communityCards) == 5) {
+        // Flush - go all in no matter the step
+        placeBet = currentPlayerState["stack"];
+      } else if (Player.isPreFlop(gameState)) {
+        let matchingCards = Player.areMatchingSign(ourCards);
         let matchingSuite = Player.areSameSuit(ourCards);
 
         if (matchingCards) {
@@ -58,11 +95,18 @@ class Player {
           // pocket Big suited connectors
           placeBet = currentPlayerState["stack"];
         } else if (["AK", "AQ", "AJ", "KQ", "KA", "QA", "JA", "QK"].includes(currentHandSign)) {
-          // pocket big connectors - call until flop
-          placeBet += minumumRaise;
+          // pocket big connectors - raise by minimum bet until flop
+          if (!hasBeenRaised) {
+            placeBet += minumumRaise;
+          }
         } else if (matchingSuite) {
-          placeBet += minumumRaise;
+          if (!hasBeenRaised) {
+            placeBet += minumumRaise;
+          }
         }
+      } else if (Player.isFlop(gameState)) {
+        let communityCards = Player.getCommunityCards(gameState);
+        
       }
 
       bet(Math.min(placeBet, currentPlayerState["stack"]));
