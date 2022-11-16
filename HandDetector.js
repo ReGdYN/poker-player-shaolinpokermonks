@@ -3,6 +3,31 @@ class HandDetector {
     return '0.1';
   }
 
+  static weHaveHighCard(gameState) {
+    var highCards = ["A", "K", "Q", "J"];
+    var myHand = this.getMyHand(gameState);
+    var myRanks = this.convertCardsToRank(myHand);
+    if (highCards.indexOf(myRanks[0]) > -1) {
+        return true;
+    }
+    if (highCards.indexOf(myRanks[1]) > -1) {
+        return true;
+    }
+    return false;
+  }
+  static weHaveVeryHighCard(gameState) {
+    var highCards = ["A", "K"];
+    var myHand = this.getMyHand(gameState);
+    var myRanks = this.convertCardsToRank(myHand);
+    if (highCards.indexOf(myRanks[0]) > -1) {
+        return true;
+    }
+    if (highCards.indexOf(myRanks[1]) > -1) {
+        return true;
+    }
+    return false;
+  }
+
   static getAllRanks() {
     return ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
   }
@@ -16,7 +41,7 @@ class HandDetector {
 
     var myHand = this.getMyHand(gameState);
     var myRanks = this.convertCardsToRank(myHand);
-    
+
     console.log("All current ranks", allCurrentRanks);
     console.log("My ranks", myRanks);
 
