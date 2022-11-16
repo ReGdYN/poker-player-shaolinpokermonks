@@ -152,7 +152,9 @@ class Player {
           }
         } else if (matchingSuite) {
           console.log("---- PREFLOP: 4 ----");
-          placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+          if (gameState["current_buy_in"] <= 300) {
+            placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+          }
         } else if (activePlayerCount <= 2 && (currentHandSign.includes("A") || currentHandSign.includes("K") || currentHandSign.includes("Q"))) {
           placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
         } else {
