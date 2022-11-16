@@ -64,7 +64,7 @@ function getFullHand(gameState) {
   const myHand = getMyHand(gameState);
   const myHandSign = getPairSign(myHand);
   const communityHand = getCommunityCards(gameState);
-  const communityHandSign = `${communityHand[0].rank}${communityHand[1].rank}${communityHand[2].rank}`;
+  const communityHandSign = communityHand.map(card => card.rank).join("");
 
   const fullHand = sortHand(`${myHandSign}${communityHandSign}`);
 
