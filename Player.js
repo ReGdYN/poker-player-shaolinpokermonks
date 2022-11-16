@@ -101,10 +101,12 @@ class Player {
 
       let hasBeenRaised = gameState["current_buy_in"] > (gameState["small_blind"] * 2);
 
-
-      /*let activePlayerCount = gameState["players"].map((player) => {
-        return player
-      });*/
+      let activePlayerCount = 0;
+      gameState["players"].forEach((player) => {
+        if (player.status == "active") {
+          activePlayerCount++;
+        }
+      });
 
       if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 5) {
         console.log("---- FLUSH ----");
@@ -151,6 +153,8 @@ class Player {
         } else if (matchingSuite) {
           console.log("---- PREFLOP: 4 ----");
           placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+        } else if (activePlayerCount <= 2 && (currentHandSign.includes("A") || currentHandSign.includes("K"))) {
+          placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
         } else {
           console.log("---- PREFLOP: 5 ----");
         }
@@ -171,10 +175,10 @@ class Player {
 
         const ourCurrentBetSize = gameState["current_buy_in"];
 
-        if (handStrength > 5) {
+        /*if (handStrength > 5) {
           console.log("---- FLOP+: 1 ----");
           placeBet = currentPlayerState["stack"];
-        } else if (HandDetector.isOurOwnTrips(gameState).isTrips) {
+        } else */if (HandDetector.isOurOwnTrips(gameState).isTrips) {
           console.log("---- FLOP+: 2 ----");
           placeBet = currentPlayerState["stack"];
         } else if (HandDetector.isOurOwnTwoPairs(gameState).isTwoPairs) {
