@@ -85,7 +85,7 @@ class Player {
   }
 
   static betRequest(gameState, bet) {
-    Player.testStuff(gameState);
+    //Player.testStuff(gameState);
     console.log("---- Starting Bet Request ----");
     try {
       const currentPlayerState = Player.getMyPlayer(gameState);
