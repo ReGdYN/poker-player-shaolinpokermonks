@@ -8,7 +8,7 @@ class Player {
   }
 
   static getMyHand(gameState) {
-    return this.getMyPlayer(gameState).hole_cards;
+    return Player.getMyPlayer(gameState).hole_cards;
   }
 
   static getCommunityCards(gameState) {
@@ -16,8 +16,8 @@ class Player {
   }
 
   static betRequest(gameState, bet) {
-    const currentPlayerState = this.getMyPlayer(gameState);
-    const ourCards = this.getMyHand(gameState);
+    const currentPlayerState = Player.getMyPlayer(gameState);
+    const ourCards = Player.getMyHand(gameState);
 
     let matchingCards = ourCards[0].rank == ourCards[1].rank;
     let matchingSuite = ourCards[0].suit == ourCards[1].suit;
