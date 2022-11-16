@@ -73,7 +73,7 @@ function getFullHand(gameState) {
   const myHand = getMyHand(gameState).map(card => card.rank);
   const communityHand = getCommunityCards(gameState).map(card => card.rank);
 
-  const fullHand = sortHand([...myHand, ...communityHand].map(card => card.rank));
+  const fullHand = sortHand([...myHand, ...communityHand]);
 
   return {
     hand: fullHand,
@@ -151,15 +151,17 @@ function isAPair(cards) {
 }
 
 function areConsecutive(array) {
-  var i = 2, d;
-  while (i < array.length) {
-    d = array[i - 2] - array[i - 1];
-    if (Math.abs(d) === 1 && d === array[i] - array[i - 1]) {
-      return false;
+  const arr = array.map(n => parseInt(n));
+  let consecutive = true;
+
+  arr.forEach((rank, index) => {
+    if (index < arr.length - 2 && rank - arr[index + 1] !== 1) {
+      consecutive = false;
     }
-    i++;
-  }
-  return true;
+  });
+
+
+  return consecutive;
 }
 
 function isDescending(arr) {
