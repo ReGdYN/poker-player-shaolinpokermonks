@@ -108,7 +108,11 @@ class Player {
         }
       } else if (Player.isFlop(gameState)) {
         let communityCards = Player.getCommunityCards(gameState);
-        
+        if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 4) {
+          if (!hasBeenRaised) {
+            placeBet += minumumRaise;
+          }
+        }
       }
       this.testStuff(gameState);
 
