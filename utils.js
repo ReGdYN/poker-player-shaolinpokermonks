@@ -1,3 +1,12 @@
+function objectValues(obj) {
+  const values = [];
+  for (const property in obj) {
+    values.push(obj[property]);
+  }
+
+  return values;
+}
+
 function getMyPlayer(gameState) {
   return gameState["players"][gameState["in_action"]];
 }
@@ -86,13 +95,13 @@ function getCounts(cards) {
 function are4OfAKind(cards) {
   const counts = getCounts(cards);
 
-  return Object.values(counts).find(count => count === 4);
+  return objectValues(counts).find(count => count === 4);
 }
 
 function are3OfAKind(cards) {
   const counts = getCounts(cards);
 
-  return Object.values(counts).find(count => count === 3);
+  return objectValues(counts).find(count => count === 3);
 }
 
 function isFullHouse(cards) {
@@ -100,7 +109,7 @@ function isFullHouse(cards) {
   let pair = false;
   let threes = false;
 
-  Object.values(counts).forEach(count => {
+  objectValues(counts).forEach(count => {
     if (count === 2) {
       pair = true;
     }
@@ -117,7 +126,7 @@ function are2Pairs(cards) {
   let pair1 = 0;
   let pair2 = 0;
 
-  Object.values(counts).forEach((count, index) => {
+  objectValues(counts).forEach((count, index) => {
     if (count === 2) {
       pair1 = index + 1;
     }
@@ -133,7 +142,7 @@ function isAPair(cards) {
   const counts = getCounts(cards);
   let pair = false;
 
-  Object.values(counts).forEach((count, index) => {
+  objectValues(counts).forEach((count, index) => {
     if (count === 2) {
       pair = true;
     }
