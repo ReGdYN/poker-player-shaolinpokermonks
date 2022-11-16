@@ -110,14 +110,15 @@ class Player {
         let communityCards = Player.getCommunityCards(gameState);
         
       }
+      this.testStuff(gameState);
 
       bet(Math.min(placeBet, currentPlayerState["stack"]));
     } catch (err) {
       console.error("[ERROR] Fucked up", err);
+      this.testStuff(gameState);
       bet(0);
     }
 
-    this.testStuff(gameState);
   }
 
   static showdown(gameState) {
