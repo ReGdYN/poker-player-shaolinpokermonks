@@ -121,7 +121,7 @@ class Player {
         if (matchingCards) {
           console.log("---- PREFLOP: MATCHINGCARD ----");
           // pocket pair preflop
-          if ((placeBet + minimumRaise) < 250) {
+          if ((gameState["current_buy_in"] + minimumRaise) < 250) {
             placeBet = 250;
           } else {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
@@ -133,7 +133,7 @@ class Player {
         } else if (["AK", "AQ", "AJ", "KQ", "KA", "QA", "JA", "QK"].includes(currentHandSign)) {
           console.log("---- PREFLOP: 2 ----");
           // pocket big connectors - raise until flop
-          if ((placeBet + minimumRaise) < 250) {
+          if ((gameState["current_buy_in"] + minimumRaise) < 250) {
             placeBet = 250;
           } else {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
@@ -175,25 +175,26 @@ class Player {
           placeBet = currentPlayerState["stack"];
         } else if (HandDetector.isOurOwnTwoPairs(gameState).isTwoPairs) {
           console.log("---- FLOP+: 3 ----");
-          if ((placeBet + minimumRaise) < 250) {
+          if ((gameState["current_buy_in"] + minimumRaise) < 250) {
             placeBet = 250;
           } else {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
         } else if (HandDetector.isOurOwnPair(gameState).isPair) {
           console.log("---- FLOP+: 4 ----");
-          if ((placeBet + minimumRaise) < 100) {
+          if ((gameState["current_buy_in"] + minimumRaise) < 100) {
             placeBet = 100;
           } else if (ourCurrentBetSize < 300) {
-            // Willing to go up to 300
+            // Willing to go up to 300 with a single pair
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
         }
 
-        // Fold+ play along up to 50
         if (placeBet == 0 && gameState["current_buy_in"] <= 100 && haveSingleHighCard) {
+          // Fold+ play along up to 50
           placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
         } else if (Player.isPreRiver() && (gameState["current_buy_in"] - currentPlayerState["bet"] == 0)) {
+          // River - no raise, raise 50 ourselves
           placeBet = Math.max(50, minimumRaise);
         }
       }
