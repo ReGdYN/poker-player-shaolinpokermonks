@@ -188,6 +188,11 @@ class Player {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
         }
+
+        // Fold+ play along up to 50
+        if (placeBet == 0 && gameState["current_buy_in"] <= 50) {
+          placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+        }
       }
 
       console.log("GAME STATE", {
