@@ -137,7 +137,7 @@ class Player {
           // pocket big connectors - raise until flop
           if ((gameState["current_buy_in"] + minimumRaise) < 250) {
             placeBet = 250;
-          } else {
+          } else if (gameState["current_buy_in"] <= (currentPlayerState["stack"] / 2)) {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
         } else if (["10A", "A10", "K10", "10K"].includes(currentHandSign)) {
@@ -146,7 +146,7 @@ class Player {
           if (!hasBeenRaised) {
             console.log("---- PREFLOP: 3.5 ----");
             placeBet += minimumRaise;
-          } else {
+          } else if (gameState["current_buy_in"] <= (currentPlayerState["stack"] / 4)) {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
         } else if (matchingSuite) {
@@ -169,7 +169,7 @@ class Player {
 
         const ourCurrentBetSize = gameState["current_buy_in"];
 
-        /*if (handStrength > 5) {
+        /*if (handStrength >= 7) {
           console.log("---- FLOP+: 1 ----");
           placeBet = currentPlayerState["stack"];
         } else */if (HandDetector.isOurOwnTrips(gameState).isTrips) {
