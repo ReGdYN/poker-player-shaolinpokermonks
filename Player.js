@@ -1,4 +1,5 @@
 const HandDetector = require('./HandDetector');
+const utils = require('./utils');
 
 class Player {
   static get VERSION() {
@@ -85,6 +86,15 @@ class Player {
   }
 
   static betRequest(gameState, bet) {
+    try {
+      const fullHand = utils.getFullHand(gameState);
+      console.log('FULL HAND: ', fullHand);
+      const handStrength = utils.getHandStrength(fullHand);
+      console.log('HAND STRENGTH: ', handStrength);
+    } catch (e) {
+      console.log('ERROR: hand detection failed');
+    }
+
     //Player.testStuff(gameState);
     console.log("---- Starting Bet Request ----");
     try {
@@ -96,7 +106,7 @@ class Player {
 
       let hasBeenRaised = gameState["current_buy_in"] > (gameState["small_blind"] * 2);
 
- 
+
 
       if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 5) {
         // Flush - go all in no matter the step
