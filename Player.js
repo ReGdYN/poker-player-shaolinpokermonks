@@ -103,6 +103,8 @@ class Player {
           if (!hasBeenRaised) {
             placeBet += minumumRaise;
           }
+        } else {
+          bet(0);
         }
       } else if (Player.isFlop(gameState)) {
         let communityCards = Player.getCommunityCards(gameState);
@@ -114,9 +116,20 @@ class Player {
       console.error("[ERROR] Fucked up", err);
       bet(0);
     }
+
+    this.testStuff(gameState);
   }
 
   static showdown(gameState) {
+  }
+
+  static testStuff(gameState) {
+    try {
+      console.log("MY HAND:", this.getMyHand(gameState));
+      console.log("Pair Detector:", HandDetector.isOurOwnPair(gameState));
+    } catch (err) {
+      console.log("ERROR IN TESTING STUFF", err);
+    }
   }
 }
 
