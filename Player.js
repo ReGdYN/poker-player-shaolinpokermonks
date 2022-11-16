@@ -100,6 +100,8 @@ class Player {
           // pocket big connectors - raise until flop
           if ((placeBet + minumumRaise) < 250) {
             placeBet = 250;
+          } else if (!hasBeenRaised) {
+            placeBet += (minumumRaise * 2);
           }
         } else if (["10A", "A10", "K10", "10K"].includes(currentHandSign)) {
           // pocket semi-big connectors - raise by minimum bet until flop
@@ -107,9 +109,7 @@ class Player {
             placeBet += minumumRaise;
           }
         } else if (matchingSuite) {
-          if (!hasBeenRaised) {
-            placeBet += minumumRaise;
-          }
+          // Do nothing (call)
         } else {
           bet(0);
           return;
