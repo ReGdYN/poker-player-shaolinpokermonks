@@ -134,9 +134,18 @@ class Player {
         }
       } else if (Player.isFlop(gameState)) {
         let communityCards = Player.getCommunityCards(gameState);
-        let doWeHaveAPair = false;
-        //ourCards.forEach()
-        if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 4) {
+        let weHaveAPair = false;
+
+        ourCards.forEach(oCard => {
+          communityCards.forEach(cCard => {
+            if (oCard.rank === cCard.rank) {
+              weHaveAPair = true;
+            }
+          })
+        });
+        if (weHaveAPair) {
+          placeBet = currentPlayerState["stack"];
+        } else if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 4) {
           placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
         }
       }
