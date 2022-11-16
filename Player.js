@@ -122,8 +122,6 @@ class Player {
           // pocket pair preflop
           if ((placeBet + minumumRaise) < 250) {
             placeBet = 250;
-          } else if (!hasBeenRaised) {
-            placeBet += (minumumRaise * 2);
           } else {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
@@ -136,8 +134,6 @@ class Player {
           // pocket big connectors - raise until flop
           if ((placeBet + minumumRaise) < 250) {
             placeBet = 250;
-          } else if (!hasBeenRaised) {
-            placeBet += (minumumRaise * 2);
           } else {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
