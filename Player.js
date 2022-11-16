@@ -74,7 +74,7 @@ class Player {
   }
 
   static betRequest(gameState, bet) {
-    Player.testStuff(gameState);
+    //Player.testStuff(gameState);
     try {
       const currentPlayerState = Player.getMyPlayer(gameState);
       const ourCards = Player.getMyHand(gameState);
