@@ -81,6 +81,42 @@ class HandDetector {
       secondPairingRank: false
     };
   }
+  static isOurOwnTrips(gameState) {
+    var allCards = this.getAllPlayingCards(gameState);
+    var allCurrentRanks = allCards.map(card => card.rank);
+
+    var myHand = this.getMyHand(gameState);
+    var myRanks = this.convertCardsToRank(myHand);
+
+    var firstTrips = false;
+    var secondTrips = false;
+    var firstTripsRank = false;
+    var secondTripsRank = false;
+    if (allCurrentRanks.filter(rank => rank === myRanks[0]).length === 3) {
+      firstTrips = true;
+      firstTripsRank = myRanks[0];
+    }
+    if (allCurrentRanks.filter(rank => rank === myRanks[1]).length === 3) {
+      secondTrips = true;
+      secondTripsRank = myRanks[1];
+    }
+    if (firstTrips) {
+      return {
+        isTrips: true,
+        tripsRank: firstTripsRank
+      };
+    }
+    if (secondTrips) {
+      return {
+        isTrips: true,
+        tripsRank: secondTripsRank
+      };
+    }
+    return {
+      isPair: false,
+      tripsRank: false
+    };
+  }
 
   static getAllPlayingCards(gameState) {
     var allCards = [...this.getCommunityCards(gameState)];
