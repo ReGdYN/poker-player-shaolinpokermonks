@@ -3,9 +3,21 @@ class Player {
     return '0.1';
   }
 
+  static getMyPlayer(gameState) {
+    return gameState["players"][gameState["in_action"]];
+  }
+
+  static getMyHand(gameState) {
+    return this.getMyPlayer(gameState).hole_cards;
+  }
+
+  static getCommunityCards(gameState) {
+    return gameState.community_cards;
+  }
+
   static betRequest(gameState, bet) {
-    const currentPlayerState = gameState["players"][gameState["in_action"]];
-    const ourCards = currentPlayerState["hole_cards"];
+    const currentPlayerState = this.getMyPlayer(gameState);
+    const ourCards = this.getMyHand(gameState);
 
     let matchingCards = ourCards[0].rank == ourCards[1].rank;
     let matchingSuite = ourCards[0].suit == ourCards[1].suit;
