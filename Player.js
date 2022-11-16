@@ -88,14 +88,6 @@ class Player {
   }
 
   static betRequest(gameState, bet) {
-    try {
-      const fullHand = utils.getFullHand(gameState);
-      console.log('FULL HAND: ', fullHand);
-      const handStrength = utils.getHandStrength(fullHand);
-      console.log('HAND STRENGTH: ', handStrength);
-    } catch (e) {
-      console.log('ERROR: hand detection failed', e);
-    }
 
     Player.testStuff(gameState);
     console.log("GameState:", gameState);
@@ -171,27 +163,33 @@ class Player {
       } else {
         console.log("---- FLOP+ ----");
 
-        /**
-         * {
-         *  isPair: T/F,
-         *  pairingRank: "A" || "2" || ..
-         * }
-         */
-        
-        if (HandDetector.isOurOwnTrips(gameState).isTrips) {
+        const fullHand = utils.getFullHand(gameState);
+        console.log('FULL HAND: ', fullHand);
+        const handStrength = utils.getHandStrength(fullHand);
+        console.log('HAND STRENGTH: ', handStrength);
+
+        const ourCurrentBetSize = gameState["current_buy_in"];
+
+        if (handStrength > 4) {
           console.log("---- FLOP+: 1 ----");
           placeBet = currentPlayerState["stack"];
+        } else if (HandDetector.isOurOwnTrips(gameState).isTrips) {
+          console.log("---- FLOP+: 3 ----");
+          placeBet = currentPlayerState["stack"];
         } else if (HandDetector.isOurOwnTwoPairs(gameState).isTwoPairs) {
-          console.log("---- FLOP+: 2 ----");
+          console.log("---- FLOP+: 3 ----");
           if ((placeBet + minumumRaise) < 250) {
             placeBet = 250;
           } else {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
         } else if (HandDetector.isOurOwnPair(gameState).isPair) {
-          console.log("---- FLOP+: 3 ----");
+          console.log("---- FLOP+: 4 ----");
           if ((placeBet + minumumRaise) < 100) {
             placeBet = 100;
+          } else if (ourCurrentBetSize < 300) {
+            // Willing to go up to 300
+            placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
         }
       }
