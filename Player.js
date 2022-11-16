@@ -105,6 +105,7 @@ class Player {
           }
         } else {
           bet(0);
+          return;
         }
       } else if (Player.isFlop(gameState)) {
         let communityCards = Player.getCommunityCards(gameState);
