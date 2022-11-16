@@ -3,7 +3,7 @@ const utils = require('./utils');
 
 class Player {
   static get VERSION() {
-    return '0.1';
+    return '1.0';
   }
 
   static getMyPlayer(gameState) {
@@ -88,14 +88,6 @@ class Player {
   }
 
   static betRequest(gameState, bet) {
-    try {
-      const fullHand = utils.getFullHand(gameState);
-      console.log('FULL HAND: ', fullHand);
-      const handStrength = utils.getHandStrength(fullHand);
-      console.log('HAND STRENGTH: ', handStrength);
-    } catch (e) {
-      console.log('ERROR: hand detection failed', e);
-    }
 
     Player.testStuff(gameState);
     console.log("GameState:", gameState);
@@ -104,14 +96,18 @@ class Player {
       const currentPlayerState = Player.getMyPlayer(gameState);
       const ourCards = Player.getMyHand(gameState);
       let placeBet = 0;
-      let minumumRaise = gameState["minimum_raise"];
+      let minimumRaise = gameState["minimum_raise"];
       let currentHandSign = Player.getPairSign(ourCards);
 
       let hasBeenRaised = gameState["current_buy_in"] > (gameState["small_blind"] * 2);
+      let haveSingleHighCard = (currentHandSign.includes("A") || currentHandSign.includes("K") || currentHandSign.includes("Q"));
 
-      /*let activePlayerCount = gameState["players"].map((player) => {
-        return player
-      });*/
+      let activePlayerCount = 0;
+      gameState["players"].forEach((player) => {
+        if (player.status == "active") {
+          activePlayerCount++;
+        }
+      });
 
       if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 5) {
         console.log("---- FLUSH ----");
@@ -125,10 +121,8 @@ class Player {
         if (matchingCards) {
           console.log("---- PREFLOP: MATCHINGCARD ----");
           // pocket pair preflop
-          if ((placeBet + minumumRaise) < 250) {
+          if ((gameState["current_buy_in"] + minimumRaise) < 250) {
             placeBet = 250;
-          } else if (!hasBeenRaised) {
-            placeBet += (minumumRaise * 2);
           } else {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
@@ -139,10 +133,8 @@ class Player {
         } else if (["AK", "AQ", "AJ", "KQ", "KA", "QA", "JA", "QK"].includes(currentHandSign)) {
           console.log("---- PREFLOP: 2 ----");
           // pocket big connectors - raise until flop
-          if ((placeBet + minumumRaise) < 250) {
+          if ((gameState["current_buy_in"] + minimumRaise) < 250) {
             placeBet = 250;
-          } else if (!hasBeenRaised) {
-            placeBet += (minumumRaise * 2);
           } else {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
@@ -151,48 +143,59 @@ class Player {
           // pocket semi-big connectors - raise by minimum bet until flop
           if (!hasBeenRaised) {
             console.log("---- PREFLOP: 3.5 ----");
-            placeBet += minumumRaise;
+            placeBet += minimumRaise;
           } else {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
         } else if (matchingSuite) {
           console.log("---- PREFLOP: 4 ----");
+          if (gameState["current_buy_in"] <= 300) {
+            placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+          }
+        } else if (activePlayerCount <= 2 && haveSingleHighCard) {
           placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
         } else {
           console.log("---- PREFLOP: 5 ----");
         }
-      } else if (Player.isFlop(gameState) && Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 4) {
-        console.log("---- FLOP: 4 for FLUSH ----");
-        if ((placeBet + minumumRaise) < 100) {
-          placeBet = 100;
-        } else {
-          placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
-        }
       } else {
         console.log("---- FLOP+ ----");
 
-        /**
-         * {
-         *  isPair: T/F,
-         *  pairingRank: "A" || "2" || ..
-         * }
-         */
-        
-        if (HandDetector.isOurOwnTrips(gameState).isTrips) {
+        const fullHand = utils.getFullHand(gameState);
+        console.log('FULL HAND: ', fullHand);
+        const handStrength = utils.getHandStrength(fullHand);
+        console.log('HAND STRENGTH: ', handStrength);
+
+        const ourCurrentBetSize = gameState["current_buy_in"];
+
+        /*if (handStrength > 5) {
           console.log("---- FLOP+: 1 ----");
           placeBet = currentPlayerState["stack"];
-        } else if (HandDetector.isOurOwnTwoPairs(gameState).isTwoPairs) {
+        } else */if (HandDetector.isOurOwnTrips(gameState).isTrips) {
           console.log("---- FLOP+: 2 ----");
-          if ((placeBet + minumumRaise) < 250) {
+          placeBet = currentPlayerState["stack"];
+        } else if (HandDetector.isOurOwnTwoPairs(gameState).isTwoPairs) {
+          console.log("---- FLOP+: 3 ----");
+          if ((gameState["current_buy_in"] + minimumRaise) < 250) {
             placeBet = 250;
           } else {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
         } else if (HandDetector.isOurOwnPair(gameState).isPair) {
-          console.log("---- FLOP+: 3 ----");
-          if ((placeBet + minumumRaise) < 100) {
+          console.log("---- FLOP+: 4 ----");
+          if ((gameState["current_buy_in"] + minimumRaise) < 100) {
             placeBet = 100;
+          } else if (ourCurrentBetSize < 300) {
+            // Willing to go up to 300 with a single pair
+            placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
+        }
+
+        if (placeBet == 0 && gameState["current_buy_in"] <= 100 && haveSingleHighCard) {
+          // Fold+ play along up to 50
+          placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+        } else if (Player.isPreRiver() && (gameState["current_buy_in"] - currentPlayerState["bet"] == 0)) {
+          // River - no raise, raise 50 ourselves
+          placeBet = Math.max(50, minimumRaise);
         }
       }
 
