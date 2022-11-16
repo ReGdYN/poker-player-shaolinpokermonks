@@ -1,5 +1,5 @@
 function getMyPlayer(gameState) {
-  return gameState.player;
+  return gameState["players"][gameState["in_action"]];
 }
 
 function getMyHand(gameState) {
