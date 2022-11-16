@@ -96,10 +96,11 @@ class Player {
       const currentPlayerState = Player.getMyPlayer(gameState);
       const ourCards = Player.getMyHand(gameState);
       let placeBet = 0;
-      let minumumRaise = gameState["minimum_raise"];
+      let minimumRaise = gameState["minimum_raise"];
       let currentHandSign = Player.getPairSign(ourCards);
 
       let hasBeenRaised = gameState["current_buy_in"] > (gameState["small_blind"] * 2);
+      let haveSingleHighCard = (currentHandSign.includes("A") || currentHandSign.includes("K") || currentHandSign.includes("Q"));
 
       let activePlayerCount = 0;
       gameState["players"].forEach((player) => {
@@ -120,7 +121,7 @@ class Player {
         if (matchingCards) {
           console.log("---- PREFLOP: MATCHINGCARD ----");
           // pocket pair preflop
-          if ((placeBet + minumumRaise) < 250) {
+          if ((placeBet + minimumRaise) < 250) {
             placeBet = 250;
           } else {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
@@ -132,7 +133,7 @@ class Player {
         } else if (["AK", "AQ", "AJ", "KQ", "KA", "QA", "JA", "QK"].includes(currentHandSign)) {
           console.log("---- PREFLOP: 2 ----");
           // pocket big connectors - raise until flop
-          if ((placeBet + minumumRaise) < 250) {
+          if ((placeBet + minimumRaise) < 250) {
             placeBet = 250;
           } else {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
@@ -142,7 +143,7 @@ class Player {
           // pocket semi-big connectors - raise by minimum bet until flop
           if (!hasBeenRaised) {
             console.log("---- PREFLOP: 3.5 ----");
-            placeBet += minumumRaise;
+            placeBet += minimumRaise;
           } else {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
@@ -151,7 +152,7 @@ class Player {
           if (gameState["current_buy_in"] <= 300) {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
-        } else if (activePlayerCount <= 2 && (currentHandSign.includes("A") || currentHandSign.includes("K") || currentHandSign.includes("Q"))) {
+        } else if (activePlayerCount <= 2 && haveSingleHighCard) {
           placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
         } else {
           console.log("---- PREFLOP: 5 ----");
@@ -174,14 +175,14 @@ class Player {
           placeBet = currentPlayerState["stack"];
         } else if (HandDetector.isOurOwnTwoPairs(gameState).isTwoPairs) {
           console.log("---- FLOP+: 3 ----");
-          if ((placeBet + minumumRaise) < 250) {
+          if ((placeBet + minimumRaise) < 250) {
             placeBet = 250;
           } else {
             placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
         } else if (HandDetector.isOurOwnPair(gameState).isPair) {
           console.log("---- FLOP+: 4 ----");
-          if ((placeBet + minumumRaise) < 100) {
+          if ((placeBet + minimumRaise) < 100) {
             placeBet = 100;
           } else if (ourCurrentBetSize < 300) {
             // Willing to go up to 300
@@ -190,8 +191,10 @@ class Player {
         }
 
         // Fold+ play along up to 50
-        if (placeBet == 0 && gameState["current_buy_in"] <= 50) {
+        if (placeBet == 0 && gameState["current_buy_in"] <= 100 && haveSingleHighCard) {
           placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+        } else if (Player.isPreRiver() && (gameState["current_buy_in"] - currentPlayerState["bet"] == 0)) {
+          placeBet = Math.max(50, minimumRaise);
         }
       }
 
