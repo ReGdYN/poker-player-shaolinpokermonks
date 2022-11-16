@@ -73,6 +73,17 @@ class Player {
     return maxCount;
   }
 
+  static testStuff(gameState) {
+    try {
+      console.log("MY HAND:", Player.getMyHand(gameState));
+      console.log("WHOLE CARD POOL:", HandDetector.getAllPlayingRanks(gameState));
+      console.log("Pair Detector:", HandDetector.isOurOwnPair(gameState));
+      console.log("Two Pairs Detector:", HandDetector.isOurOwnTwoPairs(gameState));
+    } catch (err) {
+      console.log("ERROR IN TESTING STUFF", err);
+    }
+  }
+
   static betRequest(gameState, bet) {
     Player.testStuff(gameState);
     console.log("---- Starting Bet Request ----");
@@ -134,16 +145,6 @@ class Player {
   static showdown(gameState) {
   }
 
-  static testStuff(gameState) {
-    try {
-      console.log("MY HAND:", Player.getMyHand(gameState));
-      console.log("WHOLE CARD POOL:", HandDetector.getAllPlayingRanks(gameState));
-      console.log("Pair Detector:", HandDetector.isOurOwnPair(gameState));
-      console.log("Two Pairs Detector:", HandDetector.isOurOwnTwoPairs(gameState));
-    } catch (err) {
-      console.log("ERROR IN TESTING STUFF", err);
-    }
-  }
 }
 
 module.exports = Player;
