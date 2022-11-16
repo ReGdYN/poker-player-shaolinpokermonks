@@ -27,6 +27,18 @@ class HandDetector {
     }
     return false;
   }
+  static amountOfPlayersOut(gameState) {
+    var players = gameState.players;
+    var playerStatuses = players.map(player => player.status);
+    var playersOut = playerStatuses.filter(status => status === "out");
+    return playersOut.length;
+  }
+  static amountOfPlayersActive(gameState) {
+    var players = gameState.players;
+    var playerStatuses = players.map(player => player.status);
+    var playersActive = playerStatuses.filter(status => status === "active");
+    return playersActive.length;
+  }
 
   static getAllRanks() {
     return ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
