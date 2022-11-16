@@ -1,3 +1,5 @@
+const HandDetector = require('./HandDetector');
+
 class Player {
   static get VERSION() {
     return '0.1';
@@ -72,6 +74,7 @@ class Player {
   }
 
   static betRequest(gameState, bet) {
+    Player.testStuff(gameState);
     try {
       const currentPlayerState = Player.getMyPlayer(gameState);
       const ourCards = Player.getMyHand(gameState);
@@ -113,12 +116,10 @@ class Player {
           placeBet += minumumRaise;
         }
       }
-      Player.testStuff(gameState);
 
       bet(Math.min(placeBet, currentPlayerState["stack"]));
     } catch (err) {
       console.error("[ERROR] Fucked up", err);
-      Player.testStuff(gameState);
       bet(0);
     }
 
@@ -130,7 +131,7 @@ class Player {
   static testStuff(gameState) {
     try {
       console.log("MY HAND:", Player.getMyHand(gameState));
-      //console.log("Pair Detector:", HandDetector.isOurOwnPair(gameState));
+      console.log("Pair Detector:", HandDetector.isOurOwnPair(gameState));
     } catch (err) {
       console.log("ERROR IN TESTING STUFF", err);
     }
