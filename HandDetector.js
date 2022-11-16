@@ -41,6 +41,10 @@ class HandDetector {
         pairingRank: secondPairingRank
       };
     }
+    return {
+      isPair: false,
+      pairingRank: false
+    };
   }
 
   static getAllPlayingCards(gameState) {
