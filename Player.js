@@ -62,6 +62,8 @@ class Player {
           placeBet += minumumRaise;
         } else if (matchingSuite) {
           placeBet += minumumRaise;
+        } else {
+          bet(0);
         }
       }
 
