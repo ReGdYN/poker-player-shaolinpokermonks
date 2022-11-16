@@ -151,16 +151,17 @@ function isAPair(cards) {
 }
 
 function areConsecutive(array) {
-  const arr = array.map(n => parseInt(n)).reverse();
-  var i = 2, d;
-  while (i < arr.length) {
-    d = arr[i - 2] - arr[i - 1];
-    if (Math.abs(d) === 1 && d === arr[i] - arr[i - 1]) {
-      return false;
+  const arr = array.map(n => parseInt(n));
+  let consecutive = true;
+
+  arr.forEach((rank, index) => {
+    if (index < arr.length - 2 && rank - arr[index + 1] !== 1) {
+      consecutive = false;
     }
-    i++;
-  }
-  return true;
+  });
+
+
+  return consecutive;
 }
 
 function isDescending(arr) {
