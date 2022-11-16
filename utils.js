@@ -28,8 +28,8 @@ function areSameSuit(cards) {
 }
 
 function sortHand(hand) {
-  const handArray = hand.split("");
-  handArray.sort((a, b) => {
+  const copy = [...hand];
+  copy.sort((a, b) => {
     let first = parseInt(a);
     let second = parseInt(b);
 
@@ -65,8 +65,8 @@ function sortHand(hand) {
 
     return second - first;
   });
-//   console.log('QQQQ', hand.split(""));
-  return handArray.join('');
+
+  return copy;
 }
 
 function getFullHand(gameState) {
@@ -75,19 +75,20 @@ function getFullHand(gameState) {
   const communityHand = getCommunityCards(gameState);
   const communityHandSign = communityHand.map(card => card.rank).join("");
 
-  const fullHand = sortHand(`${myHandSign}${communityHandSign}`);
+  const fullHand = sortHand([...myHand, ...communityHand].map(card => card.rank));
 
   return {
     hand: fullHand,
     ourHand: myHandSign,
     communityHand: communityHandSign,
+    fullHand: fullHand.join(""),
     isMatchingSuit: areSameSuit([...myHand, ...communityHand]),
   };
 }
 
 function getCounts(cards) {
   const counts = {};
-  cards.split("").forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
+  cards.forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
 
   return counts;
 }
@@ -174,7 +175,7 @@ function getHandStrength(fullHand) {
     return 10;
   }
 
-  if (fullHand.isMatchingSuit && areConsecutive(fullHand.hand.split(""))) {
+  if (fullHand.isMatchingSuit && areConsecutive(fullHand.hand)) {
     return 9;
   }
 
@@ -190,7 +191,7 @@ function getHandStrength(fullHand) {
     return 6;
   }
 
-  if (isDescending(fullHand.hand.split(""))) {
+  if (isDescending(fullHand.hand)) {
     return 5;
   }
 
