@@ -15,6 +15,22 @@ class Player {
     return gameState.community_cards;
   }
 
+  static isPreFlop(gameState) {
+    return Player.getCommunityCards(gameState).length === 0;
+  }
+
+  static isFlop(gameState) {
+    return Player.getCommunityCards(gameState).length === 3;
+  }
+
+  static isPreTurn(gameState) {
+    return Player.getCommunityCards(gameState).length === 4;
+  }
+
+  static isPreRiver(gameState) {
+    return Player.getCommunityCards(gameState).length === 5;
+  }
+
   static betRequest(gameState, bet) {
     const currentPlayerState = Player.getMyPlayer(gameState);
     const ourCards = Player.getMyHand(gameState);
