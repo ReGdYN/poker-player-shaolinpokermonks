@@ -83,7 +83,7 @@ class HandDetector {
   }
 
   static getAllPlayingCards(gameState) {
-    var allCards = this.getCommunityCards(gameState);
+    var allCards = [...this.getCommunityCards(gameState)];
     var playerCards = this.getMyHand(gameState);
     allCards.push(playerCards[0]);
     allCards.push(playerCards[1]);
