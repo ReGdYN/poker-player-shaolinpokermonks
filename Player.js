@@ -45,14 +45,21 @@ class Player {
       const ourCards = Player.getMyHand(gameState);
       let placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
       let minumumRaise = gameState["minimum_raise"];
+      let currentHandSign = Player.getPairSign(ourCards);
 
       if (Player.isPreFlop(gameState)) {
         let matchingCards = ourCards[0].rank == ourCards[1].rank;
         let matchingSuite = Player.areSameSuit(ourCards);
 
-        // pocket pair preflop
         if (matchingCards) {
+          // pocket pair preflop
           placeBet = currentPlayerState["stack"];
+        } else if (matchingSuite && ["AK", "AQ", "AJ", "KQ", "KA", "QA", "JA", "QK"].includes(currentHandSign)) {
+          // pocket Big suited connectors
+          placeBet = currentPlayerState["stack"];
+        } else if (["AK", "AQ", "AJ", "KQ", "KA", "QA", "JA", "QK"].includes(currentHandSign)) {
+          // pocket big connectors - call until flop
+          placeBet += minumumRaise;
         } else if (matchingSuite) {
           placeBet += minumumRaise;
         }
