@@ -109,6 +109,8 @@ class Player {
         }
       });
 
+      console.log("Active players: ", activePlayerCount);
+
       if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 5) {
         console.log("---- FLUSH ----");
         // Flush - go all in no matter the step
@@ -199,10 +201,7 @@ class Player {
         }
       }
 
-      console.log("GAME STATE", {
-        gameState,
-        placeBet,
-      });
+      console.log("----- Placing Bet:", placeBet, " -------");
 
       bet(Math.min(placeBet, currentPlayerState["stack"]));
     } catch (err) {
