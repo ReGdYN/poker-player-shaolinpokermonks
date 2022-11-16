@@ -202,6 +202,14 @@ class Player {
           // River - no raise, raise 50 ourselves
           placeBet = Math.max(50, minimumRaise);
         }
+        if (placeBet == 0 && Player.isPreTurn(gameState)) {
+          var pairingRank = HandDetector.isOurOwnPair(gameState).pairingRank;
+          if (["A", "K", "Q", "J", "10"].includes(pairingRank)) {
+            if (minimumRaise < 400) {
+              placeBet = 600;
+            }
+          }
+        }
       }
 
       console.log("----- Placing Bet:", placeBet, " -------");
