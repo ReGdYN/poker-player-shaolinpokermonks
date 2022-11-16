@@ -74,7 +74,8 @@ class Player {
   }
 
   static betRequest(gameState, bet) {
-    //Player.testStuff(gameState);
+    Player.testStuff(gameState);
+    console.log("---- Starting Bet Request ----");
     try {
       const currentPlayerState = Player.getMyPlayer(gameState);
       const ourCards = Player.getMyHand(gameState);
@@ -131,7 +132,9 @@ class Player {
   static testStuff(gameState) {
     try {
       console.log("MY HAND:", Player.getMyHand(gameState));
+      console.log("WHOLE CARD POOL:", HandDetector.getAllPlayingRanks(gameState));
       console.log("Pair Detector:", HandDetector.isOurOwnPair(gameState));
+      console.log("Two Pairs Detector:", HandDetector.isOurOwnTwoPairs(gameState));
     } catch (err) {
       console.log("ERROR IN TESTING STUFF", err);
     }

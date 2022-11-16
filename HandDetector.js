@@ -13,7 +13,7 @@ class HandDetector {
   static isOurOwnPair(gameState) {
     var allCards = this.getAllPlayingCards(gameState);
     var allCurrentRanks = allCards.map(card => card.rank);
-    
+
     var myHand = this.getMyHand(gameState);
     var myRanks = this.convertCardsToRank(myHand);
 
@@ -46,6 +46,38 @@ class HandDetector {
       pairingRank: false
     };
   }
+  static isOurOwnTwoPairs(gameState) {
+    var allCards = this.getAllPlayingCards(gameState);
+    var allCurrentRanks = allCards.map(card => card.rank);
+
+    var myHand = this.getMyHand(gameState);
+    var myRanks = this.convertCardsToRank(myHand);
+
+    var firstPair = false;
+    var secondPair = false;
+    var firstPairingRank = false;
+    var secondPairingRank = false;
+    if (allCurrentRanks.filter(rank => rank === myRanks[0]).length === 2) {
+      firstPair = true;
+      firstPairingRank = myRanks[0];
+    }
+    if (allCurrentRanks.filter(rank => rank === myRanks[0]).length === 2) {
+      secondPair = true;
+      secondPairingRank = myRanks[0];
+    }
+    if (firstPair && secondPair) {
+      return {
+        isTwoPairs: true,
+        firstPairingRank: firstPairingRank,
+        secondPairingRank: secondPairingRank
+      };
+    }
+    return {
+      isTwoPairs: false,
+      firstPairingRank: false,
+      secondPairingRank: false
+    };
+  }
 
   static getAllPlayingCards(gameState) {
     var allCards = this.getCommunityCards(gameState);
@@ -53,6 +85,9 @@ class HandDetector {
     allCards.push(playerCards[0]);
     allCards.push(playerCards[1]);
     return allCards;
+  }
+  static getAllPlayingRanks(gameState) {
+    return this.getAllPlayingCards(gameState).map(card => card.rank);
   }
   static getMyPlayer(gameState) {
     return gameState["players"][gameState["in_action"]];
