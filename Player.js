@@ -195,7 +195,7 @@ class Player {
         if (placeBet == 0 && gameState["current_buy_in"] <= 100 && haveSingleHighCard) {
           // Fold+ play along up to 50
           placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
-        } else if (Player.isPreRiver() && (gameState["current_buy_in"] - currentPlayerState["bet"] == 0)) {
+        } else if (Player.isPreRiver(gameState) && (gameState["current_buy_in"] - currentPlayerState["bet"] == 0)) {
           // River - no raise, raise 50 ourselves
           placeBet = Math.max(50, minimumRaise);
         }
