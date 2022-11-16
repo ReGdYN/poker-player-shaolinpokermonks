@@ -96,6 +96,8 @@ class Player {
 
       let hasBeenRaised = gameState["current_buy_in"] > (gameState["small_blind"] * 2);
 
+ 
+
       if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 5) {
         // Flush - go all in no matter the step
         placeBet = currentPlayerState["stack"];
@@ -133,6 +135,10 @@ class Player {
           placeBet += minumumRaise;
         }
       }
+
+      console.log("GAME STATE", {
+        gameState,
+      });
 
       bet(Math.min(placeBet, currentPlayerState["stack"]));
     } catch (err) {
