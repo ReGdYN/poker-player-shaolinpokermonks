@@ -16,21 +16,25 @@ class Player {
   }
 
   static betRequest(gameState, bet) {
-    const currentPlayerState = this.getMyPlayer(gameState);
-    const ourCards = this.getMyHand(gameState);
+    try {
+      const currentPlayerState = this.getMyPlayer(gameState);
+      const ourCards = this.getMyHand(gameState);
+      let currentBet = gameState["current_buy_in"] - currentPlayerState["bet"];
 
-    let matchingCards = ourCards[0].rank == ourCards[1].rank;
-    let matchingSuite = ourCards[0].suit == ourCards[1].suit;
+      let matchingCards = ourCards[0].rank == ourCards[1].rank;
+      let matchingSuite = ourCards[0].suit == ourCards[1].suit;
 
-    let currentBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+      //let addBet = 0;
+      //let minumumRaise = gameState["minimum_raise"];
+      if (matchingCards || matchingSuite) {
+        currentBet = currentPlayerState["stack"];
+      }
 
-    //let addBet = 0;
-    //let minumumRaise = gameState["minimum_raise"];
-    if (matchingCards || matchingSuite) {
-      currentBet = currentPlayerState["stack"];
+      bet(currentBet);
+    } catch (err) {
+      console.error("[ERROR] Fucked up", err);
+      bet(0);
     }
-
-    bet(currentBet);
   }
 
   static showdown(gameState) {
