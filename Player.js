@@ -160,13 +160,6 @@ class Player {
         } else {
           console.log("---- PREFLOP: 5 ----");
         }
-      } else if (Player.isFlop(gameState) && Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 4) {
-        console.log("---- FLOP: 4 for FLUSH ----");
-        if ((placeBet + minumumRaise) < 100) {
-          placeBet = 100;
-        } else {
-          placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
-        }
       } else {
         console.log("---- FLOP+ ----");
 
