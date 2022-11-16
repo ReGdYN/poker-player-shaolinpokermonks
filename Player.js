@@ -184,7 +184,10 @@ class Player {
           }
         } else if (HandDetector.isOurOwnPair(gameState).isPair) {
           console.log("---- FLOP+: 4 ----");
-          if ((gameState["current_buy_in"] + minimumRaise) < 100) {
+          var pairRank = HandDetector.isOurOwnPair(gameState).pairingRank;
+          if ((pairRank === "A" || pairRank === "K" || pairRank === "Q") && (gameState["current_buy_in"] + minimumRaise) < 600) {
+            placeBet = 600;
+          } else if ((gameState["current_buy_in"] + minimumRaise) < 100) {
             placeBet = 100;
           } else if (ourCurrentBetSize < 300) {
             // Willing to go up to 300 with a single pair
