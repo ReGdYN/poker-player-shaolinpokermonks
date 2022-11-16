@@ -5,7 +5,6 @@ const http = require('http');
 const app = express();
 const port = parseInt((process.env.PORT || 1337), 10);
 const Player = require('./Player');
-const HandDetector = require('./HandDetector');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

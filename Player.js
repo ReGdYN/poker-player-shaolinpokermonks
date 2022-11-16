@@ -81,7 +81,7 @@ class Player {
 
       let hasBeenRaised = gameState["current_buy_in"] > (gameState["small_blind"] * 2);
 
-      if (Player.currentMaxMatchingSuits(ourCards, communityCards) == 5) {
+      if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 5) {
         // Flush - go all in no matter the step
         placeBet = currentPlayerState["stack"];
       } else if (Player.isPreFlop(gameState)) {
