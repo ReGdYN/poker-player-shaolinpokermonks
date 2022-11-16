@@ -169,10 +169,10 @@ class Player {
 
         const ourCurrentBetSize = gameState["current_buy_in"];
 
-        if (handStrength >= 7) {
+        /*if (handStrength >= 7) {
           console.log("---- FLOP+: 1 ----");
           placeBet = currentPlayerState["stack"];
-        } else if (HandDetector.isOurOwnTrips(gameState).isTrips) {
+        } else */if (HandDetector.isOurOwnTrips(gameState).isTrips) {
           console.log("---- FLOP+: 2 ----");
           placeBet = currentPlayerState["stack"];
         } else if (HandDetector.isOurOwnTwoPairs(gameState).isTwoPairs) {
