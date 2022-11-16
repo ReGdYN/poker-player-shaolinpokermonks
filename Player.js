@@ -101,6 +101,7 @@ class Player {
 
       let hasBeenRaised = gameState["current_buy_in"] > (gameState["small_blind"] * 2);
 
+
       /*let activePlayerCount = gameState["players"].map((player) => {
         return player
       });*/
@@ -170,11 +171,11 @@ class Player {
 
         const ourCurrentBetSize = gameState["current_buy_in"];
 
-        if (handStrength > 4) {
+        if (handStrength > 5) {
           console.log("---- FLOP+: 1 ----");
           placeBet = currentPlayerState["stack"];
         } else if (HandDetector.isOurOwnTrips(gameState).isTrips) {
-          console.log("---- FLOP+: 3 ----");
+          console.log("---- FLOP+: 2 ----");
           placeBet = currentPlayerState["stack"];
         } else if (HandDetector.isOurOwnTwoPairs(gameState).isTwoPairs) {
           console.log("---- FLOP+: 3 ----");
