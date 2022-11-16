@@ -3,7 +3,7 @@ const utils = require('./utils');
 
 class Player {
   static get VERSION() {
-    return '0.1';
+    return '1.0';
   }
 
   static getMyPlayer(gameState) {
@@ -153,7 +153,7 @@ class Player {
         } else if (matchingSuite) {
           console.log("---- PREFLOP: 4 ----");
           placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
-        } else if (activePlayerCount <= 2 && (currentHandSign.includes("A") || currentHandSign.includes("K"))) {
+        } else if (activePlayerCount <= 2 && (currentHandSign.includes("A") || currentHandSign.includes("K") || currentHandSign.includes("Q"))) {
           placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
         } else {
           console.log("---- PREFLOP: 5 ----");
