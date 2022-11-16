@@ -98,7 +98,7 @@ class Player {
         } else if (matchingSuite && ["AK", "AQ", "AJ", "KQ", "KA", "QA", "JA", "QK"].includes(currentHandSign)) {
           // pocket Big suited connectors
           placeBet = currentPlayerState["stack"];
-        } else if (["AK", "AQ", "AJ", "KQ", "KA", "QA", "JA", "QK"].includes(currentHandSign)) {
+        } else if (["AK", "AQ", "AJ", "KQ", "KA", "QA", "JA", "QK", "10A", "A10", "K10", "10K"].includes(currentHandSign)) {
           // pocket big connectors - raise by minimum bet until flop
           if (!hasBeenRaised) {
             placeBet += minumumRaise;
