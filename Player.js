@@ -1,5 +1,3 @@
-const HandDetector = require("./HandDetector");
-
 class Player {
   static get VERSION() {
     return '0.1';
