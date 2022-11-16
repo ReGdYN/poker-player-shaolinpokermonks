@@ -109,8 +109,6 @@ class Player {
 
       let hasBeenRaised = gameState["current_buy_in"] > (gameState["small_blind"] * 2);
 
-
-
       if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 5) {
         console.log("---- FLUSH ----");
         // Flush - go all in no matter the step
@@ -123,7 +121,13 @@ class Player {
         if (matchingCards) {
           console.log("---- PREFLOP: MATCHINGCARD ----");
           // pocket pair preflop
-          placeBet = currentPlayerState["stack"];
+          if ((placeBet + minumumRaise) < 250) {
+            placeBet = 250;
+          } else if (!hasBeenRaised) {
+            placeBet += (minumumRaise * 2);
+          } else {
+            placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+          }
         } else if (matchingSuite && ["AK", "AQ", "AJ", "KQ", "KA", "QA", "JA", "QK"].includes(currentHandSign)) {
           console.log("---- PREFLOP: 1 ----");
           // pocket Big suited connectors
@@ -165,11 +169,35 @@ class Player {
             }
           })
         });
-        if (weHaveAPair) {
+
+        HandDetector.isOurOwnPair(gameState);
+        /**
+         * {
+         *  isPair: T/F,
+         *  pairingRank: "A" || "2" || ..
+         * }
+         */
+
+        if (HandDetector.isOurOwnPair(gameState).isPair) {
           console.log("---- FLOP: 1 ----");
-          placeBet = currentPlayerState["stack"];
-        } else if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 4) {
+          if ((placeBet + minumumRaise) < 100) {
+            placeBet = 100;
+          } else if (!hasBeenRaised) {
+            placeBet += (minumumRaise * 2);
+          } else {
+            placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+          }
+        } else if (HandDetector.isOurOwnTwoPairs(gameState).isTwoPairs) {
           console.log("---- FLOP: 2 ----");
+          if ((placeBet + minumumRaise) < 250) {
+            placeBet = 250;
+          } else if (!hasBeenRaised) {
+            placeBet += (minumumRaise * 2);
+          } else {
+            placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+          }
+        } else if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 4) {
+          console.log("---- FLOP: 3 ----");
           placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
         }
       }
