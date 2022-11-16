@@ -43,18 +43,22 @@ class Player {
     try {
       const currentPlayerState = Player.getMyPlayer(gameState);
       const ourCards = Player.getMyHand(gameState);
-      let currentBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+      let placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+      let minumumRaise = gameState["minimum_raise"];
 
-      let matchingCards = ourCards[0].rank == ourCards[1].rank;
-      let matchingSuite = ourCards[0].suit == ourCards[1].suit;
+      if (Player.isPreFlop(gameState)) {
+        let matchingCards = ourCards[0].rank == ourCards[1].rank;
+        let matchingSuite = Player.areSameSuit(ourCards);
 
-      //let addBet = 0;
-      //let minumumRaise = gameState["minimum_raise"];
-      if (matchingCards || matchingSuite) {
-        currentBet = currentPlayerState["stack"];
+        // pocket pair preflop
+        if (matchingCards) {
+          placeBet = currentPlayerState["stack"];
+        } else if (matchingSuite) {
+          placeBet += minumumRaise;
+        }
       }
 
-      bet(currentBet);
+      bet(Math.min(placeBet, currentPlayerState["stack"]));
     } catch (err) {
       console.error("[ERROR] Fucked up", err);
       bet(0);
