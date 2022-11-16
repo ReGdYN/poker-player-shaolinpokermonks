@@ -70,17 +70,15 @@ function sortHand(hand) {
 }
 
 function getFullHand(gameState) {
-  const myHand = getMyHand(gameState);
-  const myHandSign = getPairSign(myHand);
-  const communityHand = getCommunityCards(gameState);
-  const communityHandSign = communityHand.map(card => card.rank).join("");
+  const myHand = getMyHand(gameState).map(card => card.rank);
+  const communityHand = getCommunityCards(gameState).map(card => card.rank);
 
   const fullHand = sortHand([...myHand, ...communityHand].map(card => card.rank));
 
   return {
     hand: fullHand,
-    ourHand: myHandSign,
-    communityHand: communityHandSign,
+    ourHand: myHand,
+    communityHand,
     fullHand: fullHand.join(""),
     isMatchingSuit: areSameSuit([...myHand, ...communityHand]),
   };
