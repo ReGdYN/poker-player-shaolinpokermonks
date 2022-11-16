@@ -102,7 +102,7 @@ class Player {
     try {
       const currentPlayerState = Player.getMyPlayer(gameState);
       const ourCards = Player.getMyHand(gameState);
-      let placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+      let placeBet = 0;
       let minumumRaise = gameState["minimum_raise"];
       let currentHandSign = Player.getPairSign(ourCards);
 
@@ -134,6 +134,8 @@ class Player {
             placeBet = 250;
           } else if (!hasBeenRaised) {
             placeBet += (minumumRaise * 2);
+          } else {
+            placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
         } else if (["10A", "A10", "K10", "10K"].includes(currentHandSign)) {
           console.log("---- PREFLOP: 3 ----");
@@ -141,26 +143,39 @@ class Player {
           if (!hasBeenRaised) {
             console.log("---- PREFLOP: 3.5 ----");
             placeBet += minumumRaise;
+          } else {
+            placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
         } else if (matchingSuite) {
           console.log("---- PREFLOP: 4 ----");
-          // Do nothing (call)
+          placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
         } else {
           console.log("---- PREFLOP: 5 ----");
-          bet(0);
-          return;
         }
       } else if (Player.isFlop(gameState)) {
         console.log("---- FLOP ----");
         let communityCards = Player.getCommunityCards(gameState);
-        if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 4) {
+        let weHaveAPair = false;
+
+        ourCards.forEach(oCard => {
+          communityCards.forEach(cCard => {
+            if (oCard.rank === cCard.rank) {
+              weHaveAPair = true;
+            }
+          })
+        });
+        if (weHaveAPair) {
           console.log("---- FLOP: 1 ----");
-          placeBet += minumumRaise;
+          placeBet = currentPlayerState["stack"];
+        } else if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 4) {
+          console.log("---- FLOP: 2 ----");
+          placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
         }
       }
 
       console.log("GAME STATE", {
         gameState,
+        placeBet,
       });
 
       bet(Math.min(placeBet, currentPlayerState["stack"]));
