@@ -90,7 +90,7 @@ class Player {
     try {
       const currentPlayerState = Player.getMyPlayer(gameState);
       const ourCards = Player.getMyHand(gameState);
-      let placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
+      let placeBet = 0;
       let minumumRaise = gameState["minimum_raise"];
       let currentHandSign = Player.getPairSign(ourCards);
 
@@ -117,27 +117,31 @@ class Player {
             placeBet = 250;
           } else if (!hasBeenRaised) {
             placeBet += (minumumRaise * 2);
+          } else {
+            placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
         } else if (["10A", "A10", "K10", "10K"].includes(currentHandSign)) {
           // pocket semi-big connectors - raise by minimum bet until flop
           if (!hasBeenRaised) {
             placeBet += minumumRaise;
+          } else {
+            placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
           }
         } else if (matchingSuite) {
-          // Do nothing (call)
-        } else {
-          bet(0);
-          return;
+          placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
         }
       } else if (Player.isFlop(gameState)) {
         let communityCards = Player.getCommunityCards(gameState);
+        let doWeHaveAPair = false;
+        //ourCards.forEach()
         if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 4) {
-          placeBet += minumumRaise;
+          placeBet = gameState["current_buy_in"] - currentPlayerState["bet"];
         }
       }
 
       console.log("GAME STATE", {
         gameState,
+        placeBet,
       });
 
       bet(Math.min(placeBet, currentPlayerState["stack"]));
