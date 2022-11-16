@@ -31,6 +31,14 @@ class Player {
     return Player.getCommunityCards(gameState).length === 5;
   }
 
+  static getPairSign(cards) {
+    return `${cards[0].rank}${cards[1].rank}`;
+  }
+
+  static areSameSuit(cards) {
+    return cards[0].suit === cards[1].suit;
+  }
+
   static betRequest(gameState, bet) {
     const currentPlayerState = Player.getMyPlayer(gameState);
     const ourCards = Player.getMyHand(gameState);
