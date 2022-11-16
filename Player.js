@@ -92,7 +92,7 @@ class Player {
       const handStrength = utils.getHandStrength(fullHand);
       console.log('HAND STRENGTH: ', handStrength);
     } catch (e) {
-      console.log('ERROR: hand detection failed');
+      console.log('ERROR: hand detection failed', e);
     }
 
     Player.testStuff(gameState);
