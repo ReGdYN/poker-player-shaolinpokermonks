@@ -95,7 +95,9 @@ class Player {
       console.log('ERROR: hand detection failed');
     }
 
-    //Player.testStuff(gameState);
+    Player.testStuff(gameState);
+    console.log("GameState:", gameState);
+    console.log("CommunityCardsLength", Player.getCommunityCards(gameState).length);
     console.log("---- Starting Bet Request ----");
     try {
       const currentPlayerState = Player.getMyPlayer(gameState);
@@ -109,19 +111,24 @@ class Player {
 
 
       if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 5) {
+        console.log("---- FLUSH ----");
         // Flush - go all in no matter the step
         placeBet = currentPlayerState["stack"];
       } else if (Player.isPreFlop(gameState)) {
+        console.log("---- PREFLOP ----");
         let matchingCards = Player.areMatchingSign(ourCards);
         let matchingSuite = Player.areSameSuit(ourCards);
 
         if (matchingCards) {
+          console.log("---- PREFLOP: MATCHINGCARD ----");
           // pocket pair preflop
           placeBet = currentPlayerState["stack"];
         } else if (matchingSuite && ["AK", "AQ", "AJ", "KQ", "KA", "QA", "JA", "QK"].includes(currentHandSign)) {
+          console.log("---- PREFLOP: 1 ----");
           // pocket Big suited connectors
           placeBet = currentPlayerState["stack"];
         } else if (["AK", "AQ", "AJ", "KQ", "KA", "QA", "JA", "QK"].includes(currentHandSign)) {
+          console.log("---- PREFLOP: 2 ----");
           // pocket big connectors - raise until flop
           if ((placeBet + minumumRaise) < 250) {
             placeBet = 250;
@@ -129,19 +136,25 @@ class Player {
             placeBet += (minumumRaise * 2);
           }
         } else if (["10A", "A10", "K10", "10K"].includes(currentHandSign)) {
+          console.log("---- PREFLOP: 3 ----");
           // pocket semi-big connectors - raise by minimum bet until flop
           if (!hasBeenRaised) {
+            console.log("---- PREFLOP: 3.5 ----");
             placeBet += minumumRaise;
           }
         } else if (matchingSuite) {
+          console.log("---- PREFLOP: 4 ----");
           // Do nothing (call)
         } else {
+          console.log("---- PREFLOP: 5 ----");
           bet(0);
           return;
         }
       } else if (Player.isFlop(gameState)) {
+        console.log("---- FLOP ----");
         let communityCards = Player.getCommunityCards(gameState);
         if (Player.currentMaxMatchingSuits(ourCards, Player.getCommunityCards(gameState)) == 4) {
+          console.log("---- FLOP: 1 ----");
           placeBet += minumumRaise;
         }
       }
