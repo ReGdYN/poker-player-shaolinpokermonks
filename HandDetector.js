@@ -14,7 +14,7 @@ class HandDetector {
     var allCards = this.getAllPlayingCards(gameState);
     var allCurrentRanks = allCards.map(card => card.rank);
     
-    var myHand = this.getMyHand();
+    var myHand = this.getMyHand(gameState);
     var myRanks = this.convertCardsToRank(myHand);
 
     var firstPair = false;
